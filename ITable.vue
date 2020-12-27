@@ -162,24 +162,15 @@ export default {
      */
     if (this.pagination) {
       this.$watch('computedQuery', function(value, oldValue) {
-        if (!this.debounce.length || !oldValue || !value) {
-          this.getTableData()
-        } else {
-          /** 不要使用两段 设值 */
+        if (!this.debounce.length || !oldValue || !value) { this.getTableData() } else {
           const OPH = Object.prototype.hasOwnProperty
-          const OPT = Object.prototype.toString
           for (const keys in value) {
             if (OPH.call(value, keys)) {
               for (const key in oldValue) {
                 if (OPH.call(oldValue, key)) {
                   keys === key
                       ? oldValue[key] !== value[keys]
-                      ? (OPT.call(oldValue[key]) !== '[object Null]' &&
-                          OPT.call(oldValue[key]) !== '[object Undefined]' &&
-                          OPT.call(value[keys]) !== '[object Null]' &&
-                          OPT.call(value[keys]) !== '[object Undefined]' &&
-                          OPT.call(oldValue[key]) !== '[object Number]' &&
-                          OPT.call(value[keys]) !== '[object Number]')
+                      ? (typeof value[keys] === 'string' && typeof oldValue[key] === 'string')
                           ? oldValue[key].length > value[keys].length
                               ? this.getTableData()
                               : this.debounce.some(item => key === item)
