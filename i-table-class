@@ -78,7 +78,6 @@
  * 获取table的数据 函数名: get-table-data<Function> , 查询参数: query<Object>
  */
 import { debounce } from 'lodash'
-import renderJsx from './renderJsx'
 import { Vue ,Watch, Prop, Component } from 'vue-property-decorator'
 
 @Component
@@ -126,7 +125,25 @@ class PropsComponents extends Vue {
 }
 
 @Component({
-  components: { renderJsx }
+  components: {
+  renderJsx: {
+    functional: true,
+    props: {
+      row: {
+        type: Object,
+        default: () => {}
+      },
+      renderJsx: {
+        type: Function,
+        required: true,
+        default: () => () => {}
+      }
+    },
+    render(h, context) {
+      return context.props.renderJsx(h, context.props.row, context.children)
+    }
+   }
+  }
 })
 export default class classTable extends PropsComponents {
   /**
